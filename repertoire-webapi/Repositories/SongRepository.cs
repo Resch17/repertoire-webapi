@@ -55,7 +55,26 @@ namespace repertoire_webapi.Repositories
             }
         }
 
-        public List<Song> GetAllSongs(int userId)
+        public List<Song> GetAllSongs()
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                db.Open();
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandText = songsSql;
+                    var reader = cmd.ExecuteReader();
+                    var songs = new List<Song>();
+                    while (reader.Read())
+                    {
+                        songs.Add(NewSongFromDb(reader));
+                    }
+                    reader.Close();
+                    return songs;
+                }
+            }
+        }
+        public List<Song> GetSongsByUser(int userId)
         {
             using (var db = new SqlConnection(_connectionString))
             {

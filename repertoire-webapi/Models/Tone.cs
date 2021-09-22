@@ -7,7 +7,7 @@ namespace repertoire_webapi.Models
 {
     public class Tone
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Note { get; set; }
         public string Path { get; set; }
     }

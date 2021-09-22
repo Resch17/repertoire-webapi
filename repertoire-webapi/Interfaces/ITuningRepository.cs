@@ -1,4 +1,5 @@
 ﻿using repertoire_webapi.Models;
+using System.Collections.Generic;
 
 namespace repertoire_webapi.Interfaces
 {
@@ -6,5 +7,6 @@ namespace repertoire_webapi.Interfaces
     {
         void AddTuning(Tuning tuning);
         Tuning GetTuningById(int tuningId);
+        List<Tuning> GetAllTunings();
     }
 }

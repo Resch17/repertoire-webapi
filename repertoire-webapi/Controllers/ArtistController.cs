@@ -22,7 +22,7 @@ namespace repertoire_webapi.Controllers
         [HttpGet]
         public IActionResult GetAllArtists()
         {
-            return Ok(_artistRepo.GetAllArtists());
+            return Ok(_artistRepo.GetAllArtists().OrderBy(a=>a.Id));
         }
 
         [HttpGet("{artistId}")]

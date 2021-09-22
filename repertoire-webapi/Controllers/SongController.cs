@@ -19,10 +19,16 @@ namespace repertoire_webapi.Controllers
             _songRepo = songRepository;
         }
 
-        [HttpGet()]
-        public IActionResult GetAllSongs(int userId)
+        [HttpGet]
+        public IActionResult GetAllSongs()
         {
-            return Ok(_songRepo.GetAllSongs(userId).OrderBy(s => s.Id));
+            return Ok(_songRepo.GetAllSongs().OrderBy(s => s.Id));
+        }
+
+        [HttpGet("user/{userId}")]
+        public IActionResult GetSongsByUser(int userId)
+        {
+            return Ok(_songRepo.GetSongsByUser(userId).OrderBy(s => s.Id));
         }
 
         [HttpGet("{songId}")]

@@ -19,6 +19,12 @@ namespace repertoire_webapi.Controllers
             _tuningRepo = tuningRepository;
         }
 
+        [HttpGet]
+        public IActionResult GetAllTunings()
+        {
+            return Ok(_tuningRepo.GetAllTunings().ToList());
+        }
+
         [HttpGet("{tuningId}")]
         public IActionResult GetTuningById(int tuningId)
         {

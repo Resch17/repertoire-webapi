@@ -30,6 +30,32 @@ namespace repertoire_webapi.Repositories
             }
         }
 
+        public List<Tuning> GetAllTunings()
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                db.Open();
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandText = tuningSql;
+                    var reader = cmd.ExecuteReader();
+                    var tunings = new List<Tuning>();
+                    while (reader.Read())
+                    {
+                        var tuningId = DbUtils.GetInt(reader, "Id");
+                        var existingTuning = tunings.FirstOrDefault(t => t.Id == tuningId);
+                        if (existingTuning == null)
+                        {
+                            existingTuning = NewTuningFromDb(reader);
+                            tunings.Add(existingTuning);
+                        }
+                    }
+                    reader.Close();
+                    return tunings;
+                }
+            }
+        }
+
         public Tuning GetTuningById(int tuningId)
         {
             using (var db = new SqlConnection(_connectionString))
@@ -89,8 +115,8 @@ namespace repertoire_webapi.Repositories
                 String2ToneId = DbUtils.GetInt(reader, "String2ToneId"),
                 String3ToneId = DbUtils.GetInt(reader, "String3ToneId"),
                 String4ToneId = DbUtils.GetInt(reader, "String4ToneId"),
-                String5ToneId = DbUtils.GetInt(reader, "String5ToneId"),
-                String6ToneId = DbUtils.GetInt(reader, "String6ToneId"),
+                String5ToneId = DbUtils.GetNullableInt(reader, "String5ToneId"),
+                String6ToneId = DbUtils.GetNullableInt(reader, "String6ToneId"),
                 String1Tone = new Tone() { 
                     Id = DbUtils.GetInt(reader, "String1ToneId"),
                     Note = DbUtils.GetString(reader, "s1note"),
@@ -116,13 +142,13 @@ namespace repertoire_webapi.Repositories
                 },
                 String5Tone = new Tone()
                 {
-                    Id = DbUtils.GetInt(reader, "String5ToneId"),
+                    Id = DbUtils.GetNullableInt(reader, "String5ToneId"),
                     Note = DbUtils.GetString(reader, "s5note"),
                     Path = DbUtils.GetString(reader, "s5Path")
                 },
                 String6Tone = new Tone()
                 {
-                    Id = DbUtils.GetInt(reader, "String6ToneId"),
+                    Id = DbUtils.GetNullableInt(reader, "String6ToneId"),
                     Note = DbUtils.GetString(reader, "s6note"),
                     Path = DbUtils.GetString(reader, "s6Path")
                 }

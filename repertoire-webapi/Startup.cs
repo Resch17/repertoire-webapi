@@ -39,7 +39,7 @@ namespace repertoire_webapi
             services.AddTransient<ISongRepository, SongRepository>();
             services.AddTransient<INoteRepository, NoteRepository>();
             services.AddTransient<ISetlistRepository, SetlistRepository>();
-            
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -57,6 +57,13 @@ namespace repertoire_webapi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "repertoire_webapi v1"));
             }
+
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+                options.AllowAnyMethod();
+                options.AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 
