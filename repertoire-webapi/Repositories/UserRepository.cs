@@ -40,18 +40,42 @@ namespace repertoire_webapi.Repositories
             }
         }
 
+        public User GetUserFirebase(string firebaseId)
+        {
+            using (var db = new SqlConnection(_connectionString))
+            {
+                db.Open();
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandText = userSql + " WHERE u.[FirebaseId] = @FirebaseId";
+                    DbUtils.AddParameter(cmd, "FirebaseId", firebaseId);
+                    var reader = cmd.ExecuteReader();
+                    User user = null;
+                    while (reader.Read())
+                    {
+                        if (user == null)
+                        {
+                            user = NewUserFromDb(reader);
+                        }
+                    }
+                    reader.Close();
+                    return user;
+                }
+            }
+        }
+
         public void AddUser(User user)
         {
-            string sql = @"INSERT INTO [User] ([Username], [Email], [ThemeId])
+            string sql = @"INSERT INTO [User] ([Username], [Email], [ThemeId], [FirebaseId])
                            OUTPUT INSERTED.Id
-                           VALUES (@Username, @Email, @ThemeId)";
+                           VALUES (@Username, @Email, @ThemeId, @FirebaseId)";
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 user.Id = db.QuerySingle<int>(sql, user);
             }
         }
 
-        private string userSql = @"SELECT u.[Id], u.[Username], u.[Email], u.[ThemeId],
+        private string userSql = @"SELECT u.[Id], u.[Username], u.[Email], u.[ThemeId], u.[FirebaseId],
 		t.[Name] as ThemeName, t.[BackgroundColorId], t.[SecondaryBackgroundColorId],
 		t.[AccentTextColorId], t.[PrimaryTextColorId],
 		c1.[Hex] as BackgroundColorHex,
@@ -70,6 +94,7 @@ namespace repertoire_webapi.Repositories
             return new User()
             {
                 Id = DbUtils.GetInt(reader, "Id"),
+                FirebaseId = DbUtils.GetString(reader, "FirebaseId"),
                 Username = DbUtils.GetString(reader, "Username"),
                 Email = DbUtils.GetString(reader, "Email"),
                 ThemeId = DbUtils.GetInt(reader, "ThemeId"),

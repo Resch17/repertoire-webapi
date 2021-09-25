@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using repertoire_webapi.Interfaces;
 using repertoire_webapi.Models;
@@ -19,6 +20,7 @@ namespace repertoire_webapi.Controllers
             _userRepo = userRepository;
         }
 
+        [Authorize]
         [HttpGet("{userId}")]
         public IActionResult GetUserById(int userId)
         {
@@ -33,6 +35,22 @@ namespace repertoire_webapi.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("fb/{firebaseId}")]
+        public IActionResult GetUserByFirebaseId(string firebaseId)
+        {
+            var user = _userRepo.GetUserFirebase(firebaseId);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [Authorize]
         [HttpPost]
         public IActionResult AddUser(User user)
         {

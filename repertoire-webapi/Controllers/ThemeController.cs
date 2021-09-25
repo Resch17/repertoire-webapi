@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using repertoire_webapi.Interfaces;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace repertoire_webapi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ThemeController : ControllerBase

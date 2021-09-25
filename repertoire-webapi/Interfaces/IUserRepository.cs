@@ -6,5 +6,6 @@ namespace repertoire_webapi.Interfaces
     {
         void AddUser(User user);
         User GetUser(int userId);
+        User GetUserFirebase(string firebaseId);
     }
 }
